@@ -160,6 +160,8 @@
         // Standortkontrolle hinzufügen
         const searchControl = new GeoSearch.GeoSearchControl({
             provider: new GeoSearch.OpenStreetMapProvider(),
+            style: 'bar',
+            searchLabel: 'Adresse suchen',
         });
         map.addControl(searchControl);
 
