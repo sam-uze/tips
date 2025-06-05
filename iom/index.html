@@ -122,7 +122,22 @@
         async function loadGeoJSON(url) {
             let response = await fetch(url);
             let geojson = await response.json();
-            L.geoJSON(geojson).addTo(map);
+            L.geoJSON(geojson,{
+                onEachFeature: function (feature, layer) {
+                    console.log(feature);
+                    console.log(feature.properties["Incident Date"]);
+                    layer.bindPopup(`
+                        <h3>${feature.properties["Incident Date"]}</h3>
+                        <ul>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        `);
+                }
+            }).addTo(map);
 
         }
         loadGeoJSON("2024.geojson");
