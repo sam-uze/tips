@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title>One-Page Template Europa</title>
+    <title>One-Page Template Tirol</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -19,8 +19,9 @@
     <script src="https://unpkg.com/leaflet-providers@latest/leaflet-providers.js"></script>
 
     <!-- Leaflet Hash -->
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-hash@0.2.1/leaflet-hash.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@drustack/leaflet.resetview@1.9.2/dist/L.Control.ResetView.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@drustack/leaflet.resetview@1.9.2/dist/L.Control.ResetView.min.css">
+    
     <!-- eigene Stile -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital@0;1&family=Roboto:wght@300&display=swap');
@@ -79,7 +80,7 @@
 <body>
     <main>
         <header>
-            <h2><i class="fa-regular fa-map"></i> One-Page Template Europa</h2>
+            <h2><i class="fa-regular fa-map"></i> One-Page Template Tirol</h2>
             <nav>
                 <i class="fab fa-github"></i>
                 <a href="https://github.com/webmapping/">Github</a>
@@ -91,7 +92,8 @@
         <footer>
             <strong>Datenquellen:</strong>
             <nav>
-                
+                <a href="https://www.data.gv.at/katalog/de/dataset/land-tirol_elektronischekartetirol">eGrundkarte Tirol</a>,
+                <a href="https://lawinen.report/more/open-data">Lawinen.report Open Data</a>
             </nav>
         </footer>
     </main>
@@ -100,10 +102,10 @@
     <script>
         // Startansicht
         let center = {
-            lat: 47.6964,
-            lng: 13.3458,
-            zoom: 4,
-            desc: "Arithmetischer Mittelpunkt Österreichs",
+            lat: 47.197222,
+            lng: 11.532222,
+            zoom: 9,
+            desc: "Arithmetischer Mittelpunkt Tirols",
         };
 
         // Karte initialisieren
@@ -111,9 +113,35 @@
 
         // Hintergrund-Layer
         L.control.layers({
-            "OpenStreetMap": L.tileLayer.provider("OpenStreetMap.Mapnik").addTo(map),
-            "OpenTopoMap": L.tileLayer.provider("OpenTopoMap"),
-            "Esri WorldImagery": L.tileLayer.provider("Esri.WorldImagery")
+            "eGrundkarte Tirol Sommer": L.layerGroup([
+                L.tileLayer("http://wmts.kartetirol.at/gdi_base_summer/{z}/{x}/{y}.png", {
+                    attribution: "Datenquelle: <a href='https://data.tirol.gv.at'>Land Tirol</a>"
+                }),
+                L.tileLayer("http://wmts.kartetirol.at/gdi_nomenklatur/{z}/{x}/{y}.png", {
+                    attribution: "Datenquelle: <a href='https://data.tirol.gv.at'>Land Tirol</a>"
+                })
+            ]).addTo(map),
+            "eGrundkarte Tirol Winter": L.layerGroup([
+                L.tileLayer("http://wmts.kartetirol.at/gdi_base_winter/{z}/{x}/{y}.png", {
+                    attribution: "Datenquelle: <a href='https://data.tirol.gv.at'>Land Tirol</a>"
+                }),
+                L.tileLayer("http://wmts.kartetirol.at/gdi_nomenklatur/{z}/{x}/{y}.png", {
+                    attribution: "Datenquelle: <a href='https://data.tirol.gv.at'>Land Tirol</a>"
+                })
+            ]),
+            "eGrundkarte Tirol Orthofoto": L.layerGroup([
+                L.tileLayer("http://wmts.kartetirol.at/gdi_ortho/{z}/{x}/{y}.png", {
+                    attribution: "Datenquelle: <a href='https://data.tirol.gv.at'>Land Tirol</a>"
+                }),
+                L.tileLayer("http://wmts.kartetirol.at/gdi_nomenklatur/{z}/{x}/{y}.png", {
+                    attribution: "Datenquelle: <a href='https://data.tirol.gv.at'>Land Tirol</a>"
+                })
+            ]),
+            "Relief avalanche.report": L.tileLayer(
+                "https://static.avalanche.report/tms/{z}/{x}/{y}.webp", {
+                attribution: `© <a href="https://sonny.4lima.de">Sonny</a>, <a href="https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b">EU-DEM</a>, <a href="https://lawinen.report/">avalanche.report</a>, all licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>`
+            }),
+            "OpenStreetMap": L.tileLayer.provider("OpenStreetMap.Mapnik")
         }).addTo(map);
 
         // Maßstab
@@ -129,8 +157,13 @@
         }
         //loadGeoJSON(<URL>);
 
-        // Leaflet Hash für URL-Parameter
-        new L.Hash(map);
+        //Reet view
+        L.control.resetView({
+            position: "topleft",
+            title: "Startview anzeigen",
+            latlng: map.getCenter(),
+            zoom: map.getZoom(),
+        }).addTo(map);
 
     </script>
 </body>
